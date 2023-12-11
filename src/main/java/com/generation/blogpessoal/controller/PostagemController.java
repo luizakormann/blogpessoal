@@ -70,4 +70,5 @@ public class PostagemController {
 	public void delete(@PathVariable Long id) {
 		postagemRepository.deleteById(id);
 	}
+	/*Falta checar se o id existe antes do delete para dar o retorno correto: 404 não existe o id ou 204*/
 }
