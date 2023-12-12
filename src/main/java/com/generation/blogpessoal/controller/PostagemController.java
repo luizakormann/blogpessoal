@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.generation.blogpessoal.model.Postagem;
 import com.generation.blogpessoal.repository.PostagemRepository;
@@ -56,19 +57,21 @@ public class PostagemController {
 
 	@PutMapping
 	public ResponseEntity<Postagem> put(@Valid @RequestBody Postagem postagem) {
-		return ResponseEntity.status(HttpStatus.OK).body(postagemRepository.save(postagem));
-	}
 
-	/*
-	 * O put "cru" apresenta 2 grandes erros: se entramos com um ID que não existe
-	 * no PUT, ele vai criar uma nova postagem. Mesma coisa quando, ainda dentro do
-	 * método atualizar, entramos sem um número de id.
-	 */
+		if (postagemRepository.existsById(postagem.getId()))
+			return ResponseEntity.status(HttpStatus.OK).body(postagemRepository.save(postagem));
+		else
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+	}
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable Long id) {
-		postagemRepository.deleteById(id);
+
+		if (postagemRepository.existsById(id))
+			postagemRepository.deleteById(id);
+		else
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 	}
-	/*Falta checar se o id existe antes do delete para dar o retorno correto: 404 não existe o id ou 204*/
+
 }
