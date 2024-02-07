@@ -65,16 +65,7 @@ public class BasicSecurityConfig {
 	        .sessionManagement(management -> management
 	                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 	        		.csrf(csrf -> csrf.disable())
-	        		.cors(cors -> {
-	        	        CorsConfigurationSource source = request -> {
-	        	            CorsConfiguration config = new CorsConfiguration();
-	        	            config.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
-	        	            config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-	        	            config.setAllowedHeaders(Arrays.asList("*"));
-	        	            return config;
-	        	        };
-	        	        cors.configurationSource(source);
-	        	    });
+	        		.cors(withDefaults());
 
     	http
 	        .authorizeHttpRequests((auth) -> auth
